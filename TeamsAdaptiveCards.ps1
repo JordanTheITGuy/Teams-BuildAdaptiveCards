@@ -12,6 +12,15 @@ class mentionEntity{
         }
     }
 }
+
+class msTeams{
+    [array]$entities
+    msTeams([array]$entities){
+        $this.entities = $entities
+    }
+}
+
+
 class fact{
     [string]$title
     [string]$value 
@@ -44,7 +53,7 @@ class msgHeader{
 
     msgHeader([string]$text,[bool]$isSuccess){
         $this.type = "TextBlock"
-        $this.size = "Medium"
+        $this.size = "Large"
         $this.weight = "Bolder"
         $this.text = $text
         $this.style = "heading"
@@ -81,11 +90,20 @@ class jsonContent{
     [string]$type
     [string]$version
     [array]$body
+    [msTeams]$msTeams
     jsonContent([msgBody]$body){
         $this.schema = "http://adaptivecards.io/schemas/adaptive-card.json"
         $this.type = "AdaptiveCard"
-        $this.version = "1.2"
+        $this.version = "1.3"
         $this.body = $body.body
+    }
+
+    jsonContent([msgBody]$body,[msTeams]$msTeams){
+        $this.schema = "http://adaptivecards.io/schemas/adaptive-card.json"
+        $this.type = "AdaptiveCard"
+        $this.version = "1.3"
+        $this.body = $body.body
+        $this.msTeams = $msTeams.entities
     }
 }
 
@@ -109,25 +127,30 @@ class jsonPayload{
         $this.type = "message"
         $this.attachments = $jsonAttachments
     }
-
+    [string] ToJson(){
+        return $this | ConvertTo-Json -Depth 100
+    }
 }
 
 $msgHeader = [msgHeader]::New("Hello World",$false)
-$msgContent = [msgContent]::New("This is a test o the thing")
+$msgContent = [msgContent]::New("This is a test message. <at>Jordan Benzing</at>")
 $fact = [fact]::new("Burger","Bacon") 
 $fact1 = [fact]::new("Burger","turkey") 
 $msgFactSet = [msgFactSet]::New(@($fact,$fact1))
 $msgBody = [msgBody]::new($msgHeader,$msgFactSet,$msgContent)
-$msgBody | ConvertTo-Json -Depth 20
+#$entity = [mentionEntity]::New("jordan@jordantheitguy.com","Jordan Benzing")
+#$msTeams = [msTeams]::new($entity)
+#$content = [jsonContent]::New($msgBody,$msTeams)
 $content = [jsonContent]::New($msgBody)
 $jsonAttachmenets = [jsonAttachments]::new($content)
 $jsonPayload = [jsonPayload]::New($jsonAttachmenets)
 
-$uri = ""
+
+$testConfig = Get-Content -Path .\testUrl.json | ConvertFrom-Json -Depth 5
 $restParams = @{
-    Uri         = $uri
-    ContentType = "application/json"
-    Method      = 'POST'
-    Body        = $($jsonPayload | ConvertTo-Json -Depth 20)
+    Uri         = $testConfig.uri
+    ContentType = $testConfig.ContentType
+    Method      = $testConfig.Method
+    Body        = $jsonPayload.toJson()
 }
 Invoke-WebRequest @restParams
