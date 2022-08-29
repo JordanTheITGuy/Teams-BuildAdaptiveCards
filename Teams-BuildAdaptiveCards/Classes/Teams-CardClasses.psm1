@@ -1,46 +1,46 @@
-class mentionEntity{
+class mentionEntity {
     [string]$type
     [string]$text
     [hashtable]$mentioned
 
-    mentionEntity([string]$id, [string]$name){
+    mentionEntity([string]$id, [string]$name) {
         $this.type = "mention"
         $this.text = "<at>$($name)</at>"
         $this.mentioned = @{
-            id = $id
+            id   = $id
             name = $name
         }
     }
 }
 
-class msTeams{
+class msTeams {
     [array]$entities
-    msTeams([array]$entities){
+    msTeams([array]$entities) {
         $this.entities = $entities
     }
 }
 
-class fact{
+class fact {
     [string]$title
     [string]$value 
 
-    fact([string]$title, [string]$value){
+    fact([string]$title, [string]$value) {
         $this.title = $title
         $this.value = $value
     }
 }
 
-class msgFactSet{
+class msgFactSet {
     [string]$type
     [array]$facts
 
-    msgFactSet([array]$facts){
+    msgFactSet([array]$facts) {
         $this.type = "FactSet"
         $this.facts = $facts
     }
 }
 
-class msgHeader{
+class msgHeader {
     [string]$type
     [string]$size
     [string]$weight
@@ -48,61 +48,61 @@ class msgHeader{
     [string]$style
     [string]$color
 
-    msgHeader([string]$text,[bool]$isSuccess){
+    msgHeader([string]$text, [bool]$isSuccess) {
         $this.type = "TextBlock"
         $this.size = "Large"
         $this.weight = "Bolder"
         $this.text = $text
         $this.style = "heading"
-        $this.color = if($isSuccess){
+        $this.color = if ($isSuccess) {
             "Good"
         }
-        else{
+        else {
             "Attention"
         }
     }
 }
 
-class msgContent{
+class msgContent {
     [string]$type
     [string]$text
     [bool]$wrap
 
-    msgContent([string]$text){
+    msgContent([string]$text) {
         $this.type = "TextBlock"
         $this.text = $text
         $this.wrap = $true
     }
 }
 
-class msgBody{
+class msgBody {
     [array]$body
     
-    msgBody([msgHeader]$msgHeader, [msgfactSet]$msgfactSet,[msgContent]$msgContent){
-        $this.body = @($msgHeader,$msgContent,$msgfactSet)
+    msgBody([msgHeader]$msgHeader, [msgfactSet]$msgfactSet, [msgContent]$msgContent) {
+        $this.body = @($msgHeader, $msgContent, $msgfactSet)
     }
 
-    msgBody([msgHeader]$msgHeader, [msgContent]$msgContent){
-        $this.body = @($msgHeader,$msgContent)
+    msgBody([msgHeader]$msgHeader, [msgContent]$msgContent) {
+        $this.body = @($msgHeader, $msgContent)
     }
 
 }
 
-class jsonContent{
+class jsonContent {
     [string]$schema
     [string]$type
     [string]$version
     [array]$body
     [msTeams]$msTeams
 
-    jsonContent([msgBody]$body){
+    jsonContent([msgBody]$body) {
         $this.schema = "http://adaptivecards.io/schemas/adaptive-card.json"
         $this.type = "AdaptiveCard"
         $this.version = "1.3"
         $this.body = $body.body
     }
 
-    jsonContent([msgBody]$body,[msTeams]$msTeams){
+    jsonContent([msgBody]$body, [msTeams]$msTeams) {
         $this.schema = "http://adaptivecards.io/schemas/adaptive-card.json"
         $this.type = "AdaptiveCard"
         $this.version = "1.3"
@@ -111,28 +111,28 @@ class jsonContent{
     }
 }
 
-class jsonAttachments{
+class jsonAttachments {
     [string]$contentType 
     [string]$contentUrl
     [jsonContent]$content
 
-    jsonAttachments([jsonContent]$content){
+    jsonAttachments([jsonContent]$content) {
         $this.contentType = "application/vnd.microsoft.card.adaptive"
         $this.contentUrl = $null
         $this.content = $content
     }
 }
 
-class jsonPayload{
+class jsonPayload {
     [string]$type
     [array]$attachments
     
-    jsonPayload([jsonAttachments]$jsonAttachments){
+    jsonPayload([jsonAttachments]$jsonAttachments) {
         $this.type = "message"
         $this.attachments = $jsonAttachments
     }
 
-    [string] ToJson(){
+    [string] ToJson() {
         return $this | ConvertTo-Json -Depth 100
     }
 }
