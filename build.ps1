@@ -52,7 +52,7 @@ $($previousVersion.releaseNotes)
     "Module path: $modulePath"
     "Module name: $moduleName"
     "Release path: $relPath"
-    "Import module command: `"Import-Module $relPath`""
+    "Import module command: `"Import-Module ./bin/release/Teams-BuildAdaptiveCards/Teams-BuildAdaptiveCards.psm1`""
     if (!(Test-Path -Path $relPath)) {
         New-Item -Path $relPath -ItemType Directory -Force | Out-Null
     }
@@ -62,7 +62,7 @@ $($previousVersion.releaseNotes)
     $Manifest = @{
         Path              = "$relPath\$moduleName.psd1"
         ModuleVersion     = $newVersion
-        Description       = (Get-Content "./README.md" -Raw).ToString()
+        Description       = (Get-Content "./ModuleDescription.md" -Raw).ToString()
         FunctionsToExport = (Get-ChildItem -Path "$relPath\Public\*.ps1" -Recurse).BaseName
         ReleaseNotes      = $releaseNotes
     }

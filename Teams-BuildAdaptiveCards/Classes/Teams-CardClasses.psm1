@@ -20,6 +20,56 @@ class msTeams {
     }
 }
 
+
+enum teamsColumnType {
+    TextBlock = 0
+    Image = 1
+}
+
+class teamsColumnRecord {
+    [string]$type
+    [string]$text
+    [string]$url
+    [string]$altText
+
+    teamsColumnRecord([string]$text) {
+            $this.type = "TextBlock"
+            $this.text = $text
+    }
+
+    teamsColumnRecord([teamsColumnType]$type,[string]$url,[string]$altText) {
+            $this.type = $type
+            $this.url = $url
+            $this.altText = $altText
+    }
+}
+
+class teamsColumn {
+    [string]$Type
+    [array]$items
+
+    teamsColumn([array]$items){
+        if($items[0].GetType().Name -eq "teamsColumnRecord") {
+            $this.Type = "Column"
+            $this.items = $items
+        }
+    }
+}
+
+
+class teamsColumnSet {
+    [string]$type
+    [array]$columns
+
+    teamsColumnSet([array]$columns){
+        if($columns[0].GetType().Name -eq "teamsColumn") {
+            $this.type = "ColumnSet"
+            $this.columns = $columns
+        }
+    }
+}
+
+
 class fact {
     [string]$title
     [string]$value 
@@ -40,7 +90,7 @@ class msgFactSet {
     }
 }
 
-class msgHeader {
+class msgHeader{
     [string]$type
     [string]$size
     [string]$weight
@@ -48,20 +98,38 @@ class msgHeader {
     [string]$style
     [string]$color
 
-    msgHeader([string]$text, [bool]$isSuccess) {
+    msgHeader([string]$text,[string]$color){
         $this.type = "TextBlock"
         $this.size = "Large"
         $this.weight = "Bolder"
         $this.text = $text
         $this.style = "heading"
-        $this.color = if ($isSuccess) {
-            "Good"
-        }
-        else {
-            "Attention"
+        $this.color = switch ($color) {
+            "Good" {
+                "Good"
+              }
+            "Attention" {
+                "Attention"
+            }
+            "Accent"{
+                "Accent"
+            }
+            "Warning"{
+                "Warning"
+            }
+            "Dark"{
+                "Dark"
+            }
+            "Light"{
+                "Light"
+            }
+            Default {
+                "Default"
+            }
         }
     }
 }
+
 
 class msgContent {
     [string]$type
@@ -84,6 +152,9 @@ class msgBody {
 
     msgBody([msgHeader]$msgHeader, [msgContent]$msgContent) {
         $this.body = @($msgHeader, $msgContent)
+    }
+    msgBody([msgHeader]$msgHeader,[msgContent]$msgContent,[teamsColumnSet]$teamsColumnSet) {
+        $this.body = @($msgHeader,$msgContent,$teamsColumnSet)
     }
 
 }
