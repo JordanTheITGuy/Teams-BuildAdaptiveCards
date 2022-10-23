@@ -10,7 +10,7 @@ function New-TeamsAdaptiveCard{
         [Parameter(HelpMessage = "Provide the facts object" , Mandatory = $false)]
         [msgFactSet]$Facts,
         [Parameter(HelpMessage = "Provide the Notification objects list for people, or groups you would like to tag" , Mandatory = $FALSE)]
-        [msTeams]$Mentions,
+        [mentionArray]$Mentions,
         [Parameter(HelpMessage = "Specify the type header this card should have if not specified the default will be used." , Mandatory = $false)]
         [ValidateSet("Dark","Light","Accent","Warning","Attention","Good")]
         [string]$HeaderColor,

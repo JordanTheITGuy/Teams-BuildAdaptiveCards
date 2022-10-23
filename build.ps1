@@ -62,7 +62,7 @@ $($previousVersion.releaseNotes)
     $Manifest = @{
         Path              = "$relPath\$moduleName.psd1"
         ModuleVersion     = $newVersion
-        Description       = (Get-Content "./ModuleDescription.md" -Raw).ToString()
+        Description       = (Get-Content "./ModuleInfo/ModuleDescription.md" -Raw).ToString()
         FunctionsToExport = (Get-ChildItem -Path "$relPath\Public\*.ps1" -Recurse).BaseName
         ReleaseNotes      = $releaseNotes
     }

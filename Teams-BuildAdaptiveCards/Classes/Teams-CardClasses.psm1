@@ -13,11 +13,21 @@ class mentionEntity {
     }
 }
 
-class msTeams {
-    [array]$entities
-    msTeams([array]$entities) {
+class mentionArray {
+    [System.Collections.Generic.list[mentionEntity]]$entities
+
+    mentionArray([System.Collections.Generic.List[mentionEntity]]$entities) {
         $this.entities = $entities
     }
+
+    add([mentionEntity]$entity){
+        $this.entities.Add($entity)
+    }
+
+    remove([mentionEntity]$entity){
+        $this.entities.remove($entity)
+    }
+
 }
 
 
@@ -164,7 +174,7 @@ class jsonContent {
     [string]$type
     [string]$version
     [array]$body
-    [msTeams]$msTeams
+    [mentionArray]$msTeams
 
     jsonContent([msgBody]$body) {
         $this.schema = "http://adaptivecards.io/schemas/adaptive-card.json"
@@ -173,7 +183,7 @@ class jsonContent {
         $this.body = $body.body
     }
 
-    jsonContent([msgBody]$body, [msTeams]$msTeams) {
+    jsonContent([msgBody]$body, [mentionArray]$msTeams) {
         $this.schema = "http://adaptivecards.io/schemas/adaptive-card.json"
         $this.type = "AdaptiveCard"
         $this.version = "1.3"
