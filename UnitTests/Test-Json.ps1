@@ -31,6 +31,7 @@ Describe Send-Message-WithMention {
     }
     $resp = Invoke-webrequest @restParams
     $resp.StatusCode | Should -be "200"
-    $result.msTeams
+    $resp.Content | Should -be "1"
+    $resp.StatusDescription | Should -be "OK"
     }
 }
