@@ -19,4 +19,4 @@ RUN apt-get update \
 # RUN apt-get update && export DEBIAN_FRONTEND=noninteractive \
 #     && apt-get -y install --no-install-recommends <your-package-list-here>
 
-RUN Install-Module -Name Pester
+RUN ["pwsh", "-command" ,"Install-Module -Name Pester -Force"]
