@@ -15,8 +15,10 @@ class mentionEntity {
 
 class mentionArray {
     [System.Collections.Generic.list[mentionEntity]]$entities
+    [string]$width
 
     mentionArray([System.Collections.Generic.List[mentionEntity]]$entities) {
+        $this.width = "Full"
         $this.entities = $entities
     }
 
