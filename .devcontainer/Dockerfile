@@ -19,8 +19,4 @@ RUN apt-get update \
 # RUN apt-get update && export DEBIAN_FRONTEND=noninteractive \
 #     && apt-get -y install --no-install-recommends <your-package-list-here>
 
-RUN useradd --create-home vscode
-WORKDIR /home/vscode
-USER vscode
-
-RUN Install-Module -Name Pester -Force
+RUN Install-Module -Name Pester -Force -Scope AllUsers
