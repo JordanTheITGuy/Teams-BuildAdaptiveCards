@@ -13,7 +13,7 @@ import-Module .\Teams-BuildAdaptiveCards.psm1
 Generate a mention... or don't, I'm not your parent.
 
 ```powershell
-$mention = New-TeamsMention -UPN "jordan@SomeDomain.Com" -FullName "Jordan Benzing"
+$mention = New-SingleTeamsMention -UPN "jordan@SomeDomain.Com" -FullName "Jordan Benzing"
 ```
 
 Generate some facts...
