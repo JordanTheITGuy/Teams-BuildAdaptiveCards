@@ -14,7 +14,10 @@ Generate a mention... or don't, I'm not your parent.
 
 ```powershell
 $mention = New-SingleTeamsMention -UPN "jordan@SomeDomain.Com" -FullName "Jordan Benzing"
+# Make sure you convert it into an ARRAY. I don't make the rules, that's what Teams expects.
+$mentionArray = New-TeamsMentionArray -MentionEntity $mention
 ```
+
 
 Generate some facts...
 ```powershell
@@ -24,7 +27,7 @@ $facts = New-TeamsFact -Facts @{STATE = "PASS";WORLD = "HARD"}
 Generate some JSON...
 
 ```powershell
-$json = New-TeamsAdaptiveCard -Header "Who Watches the Watchmen?" -MessageBody "<at>Jordan Benzing</at> - You have failed this city." -Failure -Mentions $mention -AsJson
+$json = New-TeamsAdaptiveCard -Header "Who Watches the Watchmen?" -MessageBody "<at>Jordan Benzing</at> - You have failed this city." -Mentions $mentionArray -AsJson
 ```
 
 Send the message. - I'm using a JSON file in gitignore to hold my URL for my webhook so the world doesn't get to see it. Sorry.
